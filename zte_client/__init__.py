@@ -76,6 +76,11 @@ class ZteClient():
             _LOGGER.exception('Failed to get devices devices')
 
     def __get_connected_devices(self):
+
+        ad_mac_addresses = []
+        ad_ipv4_addresses = []
+        ad_hostnames = []
+
         r1 = r'Transfer_meaning\(\'MACAddr\d+\',\'(.*)\'\)'
         r2 = r'Transfer_meaning\(\'IPAddr\d+\',\'(.*)\'\)'
         r3 = r'Transfer_meaning\(\'HostName\d+\',\'(.*)\'\)'
@@ -87,9 +92,37 @@ class ZteClient():
         response = requests.get(device_list_url, timeout=30, verify=False, cookies=self.cookie_jar, params=params).text
         mac_addresses = self.__getValue(r1, response)
         ipv4_addresses = self.__getValue(r2, response)
-        ipv6_addresses = [''] * len(ipv4_addresses)
         hostnames = self.__getValue(r3, response)
-        devices = list(map(self.__instance_to_device, mac_addresses, ipv4_addresses, ipv6_addresses, hostnames))
+
+        r1 = r'Transfer_meaning\(\'ADMACAddress\d+\',\'(.*)\'\)'
+        r2 = r'Transfer_meaning\(\'ADIPAddress\d+\',\'(.*)\'\)'
+        device_list_url = self.baseUrl + 'getpage.gch'
+        params = {
+            'pid': '1002', 
+            'nextpage': 'net_wlanm_assoc1_t.gch'
+        }
+        response = requests.get(device_list_url, timeout=30, verify=False, cookies=self.cookie_jar, params=params).text
+
+        ad_mac_addresses.extend(self.__getValue(r1, response))
+        ad_ipv4_addresses.extend(self.__getValue(r2, response))
+        
+        device_list_url = self.baseUrl + 'getpage.gch'
+        params = {
+            'pid': '1002', 
+            'nextpage': 'net_wlanm_assoc2_t.gch'
+        }
+        response = requests.get(device_list_url, timeout=30, verify=False, cookies=self.cookie_jar, params=params).text
+
+        ad_mac_addresses.extend(self.__getValue(r1, response))
+        ad_ipv4_addresses.extend(self.__getValue(r2, response))
+        ipv6_addresses = [''] * len(ad_ipv4_addresses)
+
+
+        for idx, mac in enumerate(mac_addresses):
+            if mac in ad_mac_addresses:
+                ad_hostnames.append(hostnames[idx])
+
+        devices = list(map(self.__instance_to_device, ad_mac_addresses, ad_ipv4_addresses, ipv6_addresses, ad_hostnames))
         _LOGGER.debug('Found {} devices'.format(len(devices)))
         return devices
 
