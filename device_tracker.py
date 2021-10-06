@@ -37,7 +37,7 @@ class ZteDeviceScanner(DeviceScanner):
 
     def __init__(self, host, user, password, tracked_devices,
                  excluded_devices):
-        from zte_client import ZteClient
+        from .zte_client import ZteClient
         self.tracked_devices = tracked_devices
         self.excluded_devices = excluded_devices
         self.results = []
