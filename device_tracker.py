@@ -11,8 +11,8 @@ from homeassistant.const import (
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    voluptuous.Optional(CONF_HOST, default='10.0.0.20'): cv.string,
-    voluptuous.Optional(CONF_USERNAME, default='admin'): cv.string,
+    voluptuous.Optional(CONF_HOST, default='192.168.1.1'): cv.string,
+    voluptuous.Optional(CONF_USERNAME, default='1234'): cv.string,
     voluptuous.Required(CONF_PASSWORD): cv.string,
     voluptuous.Optional(CONF_DEVICES, default=[]):
         voluptuous.All(cv.ensure_list, [cv.string]),
@@ -46,7 +46,7 @@ class ZteDeviceScanner(DeviceScanner):
         self.perform_device_scan()
         self.init_success = self.results is not None
         if not self.init_success:
-            _LOGGER.error("ZTE client could not connect")
+            _LOGGER.error('ZTE client could not connect')
 
     def perform_device_scan(self):
         self.zte_client.login()
@@ -72,7 +72,7 @@ class ZteDeviceScanner(DeviceScanner):
         return devices
 
     def get_device_name(self, device):
-        parts = device.split("_")
+        parts = device.split('_')
         mac_address = parts[0]
         ap_mac_address = None
         if len(parts) > 1:
@@ -84,16 +84,16 @@ class ZteDeviceScanner(DeviceScanner):
                 host_name = device.host_name
                 break
 
-        if not host_name or host_name == "--":
+        if not host_name or host_name == '--':
             host_name = mac_address
 
         if ap_mac_address:
-            ap_name = "Router"
+            ap_name = 'Router'
             for device in self.results:
                 if device.mac_address == ap_mac_address:
                     ap_name = device.host_name
                     break
 
-            return host_name + " on " + ap_name
+            return host_name + ' on ' + ap_name
 
         return host_name

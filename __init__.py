@@ -1,1 +1,1 @@
-"""ZTE Router communication component"""
+"""ZTE F680 Router communication component"""

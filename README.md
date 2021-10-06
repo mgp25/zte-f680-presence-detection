@@ -1,4 +1,4 @@
-# ZTE ZXHN h268a presence detection
+# ZTE F680 presence detection
 
 This is a [Device Tracker](https://www.home-assistant.io/components/device_tracker/) for [Home Assistant](https://github.com/home-assistant/home-assistant/). Currently in its early infancy.
 
@@ -6,7 +6,7 @@ Feedback and bug reports welcome. PRs even more welcome.
 
 ## This device tracker
 
-- [x] Connects to a local ZTE router over HTTP
+- [x] Connects to a local ZTE F680 router over HTTP
 - [ ] Lists currently connected lan and wlan devices
   - [x] about half the time
   - [ ] consistently
@@ -33,7 +33,7 @@ For example, I would do this:
 cd /home/homeassistant/.homeassistant
 mkdir -p custom_components
 cd custom_components
-git clone https://github.com/TassSinclair/zte-zxhn-h268a-presence-detection zte
+git clone https://github.com/mgp25/zte-f680-presence-detection zte
 ```
 
 And then, inside `configuration.yml`, add something like:
@@ -41,6 +41,6 @@ And then, inside `configuration.yml`, add something like:
 device_tracker:
   - platform: zte
     password: !secret zte_password
-    host: 10.0.0.1
+    host: 192.168.1.1
 ```
 (with `zte_password` defined in your `secrets.yml`, of course)

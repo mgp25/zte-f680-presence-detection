@@ -1,6 +1,7 @@
 {
     "domain": "zte",
-    "name": "Zte",
+    "name": "ZTE F680",
+    "version": 0.1,
     "documentation": "",
     "requirements": [],
     "dependencies": [],
